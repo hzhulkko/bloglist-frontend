@@ -59,6 +59,16 @@ const App = () => {
     }
   }
 
+  const likeBlog = async (id, updatedBlog) => {
+    try {
+      const blog = await blogService.update(id, updatedBlog)
+      setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
+      notifyUser(`${blog.title} by ${blog.author} liked!`)
+    } catch (e) {
+      notifyUser(e.response.data.error, 'error')
+    }
+  }
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
   }
@@ -97,7 +107,11 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={likeBlog}
+        />
       )}
     </div>
   )
