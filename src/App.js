@@ -28,6 +28,10 @@ const App = () => {
     }
   }, [])
 
+  const getUser = () => {
+    return user
+  }
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogsUser')
     setUser(null)
@@ -64,6 +68,15 @@ const App = () => {
       const blog = await blogService.update(id, updatedBlog)
       setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
       notifyUser(`${blog.title} by ${blog.author} liked!`)
+    } catch (e) {
+      notifyUser(e.response.data.error, 'error')
+    }
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(b => b.id !== id))
     } catch (e) {
       notifyUser(e.response.data.error, 'error')
     }
@@ -111,6 +124,8 @@ const App = () => {
           key={blog.id}
           blog={blog}
           likeBlog={likeBlog}
+          removeBlog={removeBlog}
+          getUser={getUser}
         />
       )}
     </div>
