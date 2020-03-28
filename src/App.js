@@ -77,20 +77,20 @@ const App = () => {
   }
 
   const notifyUser = (message, className) => {
-    setNotification({message, className})
+    setNotification({ message, className })
     setTimeout(() => {
-        setNotification(null)
+      setNotification(null)
     }, 3000)
-}
+  }
 
   const showLogin = () => (
 
-        <div>
-          <h3>Login</h3>
-          <LoginForm
-            login={login}
-          />
-        </div>
+    <div>
+      <h3>Login</h3>
+      <LoginForm
+        login={login}
+      />
+    </div>
   )
 
   const showBlogs = () => (
@@ -99,7 +99,7 @@ const App = () => {
       <button onClick={handleLogout}>logout</button>
       <Togglable buttonLabel='add new blog'>
         <BlogForm
-        addblog={addBlog}
+          addblog={addBlog}
         />
       </Togglable>
       {blogs.map(blog =>
@@ -126,7 +126,7 @@ const App = () => {
       {notification !== null && showNotification()}
       <h2>blogs</h2>
       {user === null ? showLogin()
-      : showBlogs()}
+        : showBlogs()}
 
     </div>
   )

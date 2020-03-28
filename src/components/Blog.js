@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
 
@@ -18,7 +18,7 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
   }
 
   const handleLike = () => {
-    const updatedBlog = {...blog, likes: blog.likes + 1}
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
     likeBlog(blog.id, updatedBlog)
   }
 
@@ -43,8 +43,8 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
     return (
       <div style={blogStyle}>
         <p>
-        {blog.title} by {blog.author}
-        <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
+          {blog.title} by {blog.author}
+          <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
         </p>
         <p>{blog.url}</p>
         <p>{blog.likes} <button onClick={handleLike}>like</button></p>
@@ -56,12 +56,12 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
     return (
       <div style={blogStyle}>
         <p>
-        {blog.title} by {blog.author}
-        <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
+          {blog.title} by {blog.author}
+          <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
         </p>
       </div>
     )
-}
+  }
 }
 
 export default Blog

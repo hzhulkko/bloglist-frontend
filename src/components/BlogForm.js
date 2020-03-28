@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react'
 
-const BlogForm = ({addblog}) => {
+const BlogForm = ({ addblog }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -20,7 +20,7 @@ const BlogForm = ({addblog}) => {
 
   const handleAdd = (event) => {
     event.preventDefault()
-    const newBlog = {title, author, url}
+    const newBlog = { title, author, url }
     addblog(newBlog)
     setTitle('')
     setAuthor('')
@@ -29,36 +29,36 @@ const BlogForm = ({addblog}) => {
 
   return(
 
-      <form onSubmit={handleAdd}>
-        <div>
+    <form onSubmit={handleAdd}>
+      <div>
           title
-            <input
-            type="text"
-            value={title}
-            name="title"
-            onChange={handleTitleChange}
-          />
-        </div>
-        <div>
+        <input
+          type="text"
+          value={title}
+          name="title"
+          onChange={handleTitleChange}
+        />
+      </div>
+      <div>
           author
-            <input
-            type="text"
-            value={author}
-            name="author"
-            onChange={handleAuthorChange}
-          />
-        </div>
-        <div>
+        <input
+          type="text"
+          value={author}
+          name="author"
+          onChange={handleAuthorChange}
+        />
+      </div>
+      <div>
           url
-            <input
-            type="text"
-            value={url}
-            name="url"
-            onChange={handleUrlChange}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
+        <input
+          type="text"
+          value={url}
+          name="url"
+          onChange={handleUrlChange}
+        />
+      </div>
+      <button type="submit">add</button>
+    </form>
   )
 
 }
