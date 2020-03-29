@@ -98,7 +98,7 @@ describe('Remove button', () => {
 
   })
 
-  test('is not displayed when user is not the same the user who added the blog', () => {
+  test('is not displayed when user is not the same as the user who added the blog', () => {
     const testBlog = {
       title: 'Test',
       author: 'Author',
