@@ -41,24 +41,24 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
 
   if (viewFull) {
     return (
-      <div style={blogStyle}>
-        <p>
+      <div style={blogStyle} className='blog'>
+        <span>
           {blog.title} by {blog.author}
           <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
-        </p>
-        <p>{blog.url}</p>
-        <p>{blog.likes} <button onClick={handleLike}>like</button></p>
-        <p>{blog.user.name}</p>
+        </span>
+        <p>url: {blog.url}</p>
+        <p>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
+        <p>user: {blog.user.name}</p>
         {showRemoveButton()}
       </div>
     )
   } else {
     return (
-      <div style={blogStyle}>
-        <p>
+      <div style={blogStyle} className='blog'>
+        <span>
           {blog.title} by {blog.author}
           <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
-        </p>
+        </span>
       </div>
     )
   }
