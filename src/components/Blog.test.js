@@ -70,54 +70,92 @@ describe('<Blog/>', () => {
 
 })
 
-test('when user is the same as the user who added the blog, remove button is displayed', () => {
-  const testBlog = {
-    title: 'Test',
-    author: 'Author',
-    url: 'http://url.test',
-    likes: 10,
-    user : { name: 'Test User' , username: 'testuser' }
-  }
-  const getUser = jest.fn(() => {
-    const user = { name: 'Test User' , username: 'testuser' }
-    return user
+describe('Remove button', () => {
+
+  test('is displayed when user is the same as the user who added the blog', () => {
+    const testBlog = {
+      title: 'Test',
+      author: 'Author',
+      url: 'http://url.test',
+      likes: 10,
+      user : { name: 'Test User' , username: 'testuser' }
+    }
+    const getUser = jest.fn(() => {
+      const user = { name: 'Test User' , username: 'testuser' }
+      return user
+    })
+
+    const component = render(
+      <Blog
+        blog={testBlog}
+        getUser={getUser}
+      />
+    )
+
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
+    expect(component.queryByText('remove')).toBeInTheDocument()
+
   })
 
-  const component = render(
-    <Blog
-      blog={testBlog}
-      getUser={getUser}
-    />
-  )
+  test('is not displayed when user is not the same the user who added the blog', () => {
+    const testBlog = {
+      title: 'Test',
+      author: 'Author',
+      url: 'http://url.test',
+      likes: 10,
+      user : { name: 'Test User' , username: 'testuser' }
+    }
+    const getUser = jest.fn(() => {
+      const user = { name: 'Another User' , username: 'anotheruser' }
+      return user
+    })
 
-  const viewButton = component.getByText('view')
-  fireEvent.click(viewButton)
-  expect(component.queryByText('remove')).toBeInTheDocument()
+    const component = render(
+      <Blog
+        blog={testBlog}
+        getUser={getUser}
+      />
+    )
 
-})
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
+    expect(component.queryByText('remove')).not.toBeInTheDocument()
 
-test('when user is not the same the user who added the blog, remove button is not displayed', () => {
-  const testBlog = {
-    title: 'Test',
-    author: 'Author',
-    url: 'http://url.test',
-    likes: 10,
-    user : { name: 'Test User' , username: 'testuser' }
-  }
-  const getUser = jest.fn(() => {
-    const user = { name: 'Another User' , username: 'anotheruser' }
-    return user
   })
 
-  const component = render(
-    <Blog
-      blog={testBlog}
-      getUser={getUser}
-    />
-  )
+  test('calls removeBlog when clicked', () => {
+    const testBlog = {
+      title: 'Test',
+      author: 'Author',
+      url: 'http://url.test',
+      likes: 10,
+      user : { name: 'Test User' , username: 'testuser' },
+      id: 'abc'
+    }
+    const getUser = jest.fn(() => {
+      const user = { name: 'Test User' , username: 'testuser' }
+      return user
+    })
 
-  const viewButton = component.getByText('view')
-  fireEvent.click(viewButton)
-  expect(component.queryByText('remove')).not.toBeInTheDocument()
+    const removeBlog = jest.fn()
+    window.confirm = jest.fn(() => true)
+
+    const component = render(
+      <Blog
+        blog={testBlog}
+        getUser={getUser}
+        removeBlog={removeBlog}
+      />
+    )
+
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
+    const removeButton = component.queryByText('remove')
+    fireEvent.click(removeButton)
+    expect(removeBlog.mock.calls.length).toBe(1)
+    expect(removeBlog.mock.calls[0][0]).toBe('abc')
+
+  })
 
 })
