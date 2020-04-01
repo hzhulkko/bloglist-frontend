@@ -46,9 +46,9 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
           {blog.title} by {blog.author}
           <button onClick={toggleView}>{viewFull ? 'hide' : 'view'}</button>
         </span>
-        <p>url: {blog.url}</p>
-        <p>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
-        <p>user: {blog.user.name}</p>
+        <p className='url'>url: {blog.url}</p>
+        <p className='likes'>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
+        <p className='user'>user: {blog.user.name}</p>
         {showRemoveButton()}
       </div>
     )
