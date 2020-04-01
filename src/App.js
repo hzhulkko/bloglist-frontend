@@ -14,15 +14,17 @@ const App = () => {
   const [notification, setNotification] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(blogs)
-    )
+    })
   }, [])
 
   useEffect(() => {
     const user = JSON.parse(window.localStorage.getItem('loggedBlogsUser'))
     if (user) {
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -102,15 +104,17 @@ const App = () => {
           addBlog={addBlog}
         />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          likeBlog={likeBlog}
-          removeBlog={removeBlog}
-          getUser={getUser}
-        />
-      )}
+      <div id='blog-list'>
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            likeBlog={likeBlog}
+            removeBlog={removeBlog}
+            getUser={getUser}
+          />
+        )}
+      </div>
     </div>
   )
 
