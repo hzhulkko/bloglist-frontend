@@ -6,12 +6,17 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useSelector, useDispatch } from 'react-redux'
+import { success, error } from './reducers/notificationReducer'
 
 const App = () => {
+
+  const dispatch = useDispatch()
+
+  const notification = useSelector(state => state.notification)
+
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-
-  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -46,16 +51,16 @@ const App = () => {
       window.localStorage.setItem('loggedBlogsUser', JSON.stringify(user))
       setUser(user)
     } catch (e) {
-      notifyUser(e.response.data.error, 'error')
+      showError(e.response.data.error)
     }
   }
   const addBlog = async (newBlog) => {
     try {
       const blog = await blogService.create(newBlog)
       setBlogs(blogs.concat(blog))
-      notifyUser(`${blog.title} by ${blog.author} added`)
+      showSuccess(`${blog.title} by ${blog.author} added`)
     } catch (e) {
-      notifyUser(e.response.data.error, 'error')
+      showError(e.response.data.error)
     }
   }
 
@@ -63,9 +68,9 @@ const App = () => {
     try {
       const blog = await blogService.update(id, updatedBlog)
       setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
-      notifyUser(`${blog.title} by ${blog.author} liked!`)
+      showSuccess(`${blog.title} by ${blog.author} liked!`)
     } catch (e) {
-      notifyUser(e.response.data.error, 'error')
+      showError(e.response.data.error)
     }
   }
 
@@ -74,15 +79,16 @@ const App = () => {
       await blogService.remove(id)
       setBlogs(blogs.filter(b => b.id !== id))
     } catch (e) {
-      notifyUser(e.response.data.error, 'error')
+      showError(e.response.data.error)
     }
   }
 
-  const notifyUser = (message, className) => {
-    setNotification({ message, className })
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000)
+  const showSuccess = (message) => {
+    dispatch(success(message, 3))
+  }
+
+  const showError = (message) => {
+    dispatch(error(message, 3))
   }
 
   const showLogin = () => (
@@ -120,7 +126,9 @@ const App = () => {
 
   const showNotification = () => (
     <div>
-      <Notification notification={notification}/>
+      <Notification
+        message={notification.message}
+        className={notification.className}/>
     </div>
 
   )
