@@ -11,8 +11,6 @@ import { login, logout } from './reducers/userReducer'
 const App = () => {
 
   const dispatch = useDispatch()
-
-  const notification = useSelector(state => state.notification)
   const user = useSelector(state => state.user)
 
   useEffect(() => {
@@ -47,18 +45,10 @@ const App = () => {
     </div>
   )
 
-  const showNotification = () => (
-    <div>
-      <Notification
-        message={notification.message}
-        className={notification.className}/>
-    </div>
-
-  )
 
   return (
     <div>
-      {notification !== null && showNotification()}
+      <Notification/>
       <h2>blogs</h2>
       {user === null ? showLogin()
         : showBlogs()}
