@@ -5,7 +5,7 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAll, add, update, remove } from './reducers/blogReducer'
+import { getAll, add } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
 
 const App = () => {
@@ -27,11 +27,6 @@ const App = () => {
   const handleLogin = async (username, password) => {
     dispatch(login(username, password))
   }
-
-  const addBlog = async (newBlog) => {
-    dispatch(add(newBlog))
-  }
-
   const showLogin = () => (
 
     <div>
@@ -47,9 +42,7 @@ const App = () => {
       <p>Logged in as {user.name}</p>
       <button onClick={handleLogout}>logout</button>
       <Togglable buttonLabel='add new blog'>
-        <BlogForm
-          addBlog={addBlog}
-        />
+        <BlogForm/>
       </Togglable>
       <div id='blog-list'>
         {blogs.map(blog =>
