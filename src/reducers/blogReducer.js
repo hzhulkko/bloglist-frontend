@@ -1,22 +1,5 @@
 import blogService from '../services/blogs'
-
-const dispatchError = (dispatch, error) => {
-  dispatch(
-    {
-      type: 'ERROR',
-      data: { message: error.response.data.error, className: 'error' }
-    }
-  )
-}
-
-const dispatchSuccess = (dispatch, message) => {
-  dispatch(
-    {
-      type: 'SUCCESS',
-      data: { message, className: 'success' }
-    }
-  )
-}
+import { error, success } from './notificationReducer'
 
 export const add = (newBlog) => {
   return dispatch => {
@@ -28,10 +11,10 @@ export const add = (newBlog) => {
             data: blog
           }
         )
-        dispatchSuccess(dispatch, `${blog.title} by ${blog.author} added`)
+        dispatch(success(`${blog.title} by ${blog.author} added`, 3))
       })
-      .catch(error => {
-        dispatchError(dispatch, error)
+      .catch(e => {
+        dispatch(error(e.response.data.error, 3))
 
       })
   }
@@ -47,10 +30,10 @@ export const update = (id, updatedBlog) => {
             data: blog
           }
         )
-        dispatchSuccess(dispatch, `${blog.title} by ${blog.author} voted`)
+        dispatch(success(`${blog.title} by ${blog.author} voted`, 3))
       })
-      .catch(error => {
-        dispatchError(dispatch, error)
+      .catch(e => {
+        dispatch(error(e.response.data.error, 3))
 
       })
   }
@@ -67,8 +50,8 @@ export const remove = (id) => {
           }
         )
       })
-      .catch(error => {
-        dispatchError(dispatch, error)
+      .catch(e => {
+        dispatch(error(e.response.data.error, 3))
       })
   }
 }
