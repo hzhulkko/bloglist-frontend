@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAll, add } from './reducers/blogReducer'
+import { getAll } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
 
 const App = () => {
@@ -13,7 +13,6 @@ const App = () => {
   const dispatch = useDispatch()
 
   const notification = useSelector(state => state.notification)
-  const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
   const user = useSelector(state => state.user)
 
   useEffect(() => {
@@ -44,14 +43,7 @@ const App = () => {
       <Togglable buttonLabel='add new blog'>
         <BlogForm/>
       </Togglable>
-      <div id='blog-list'>
-        {blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-          />
-        )}
-      </div>
+      <BlogList/>
     </div>
   )
 
