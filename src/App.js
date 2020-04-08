@@ -7,23 +7,21 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { useSelector, useDispatch } from 'react-redux'
-import { success, error } from './reducers/notificationReducer'
+import { error } from './reducers/notificationReducer'
+import { getAll, add, update, remove } from './reducers/blogReducer'
 
 const App = () => {
 
   const dispatch = useDispatch()
 
   const notification = useSelector(state => state.notification)
+  const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
 
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-    })
-  }, [])
+    dispatch(getAll())
+  }, [dispatch])
 
   useEffect(() => {
     const user = JSON.parse(window.localStorage.getItem('loggedBlogsUser'))
@@ -55,36 +53,15 @@ const App = () => {
     }
   }
   const addBlog = async (newBlog) => {
-    try {
-      const blog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(blog))
-      showSuccess(`${blog.title} by ${blog.author} added`)
-    } catch (e) {
-      showError(e.response.data.error)
-    }
+    dispatch(add(newBlog))
   }
 
   const likeBlog = async (id, updatedBlog) => {
-    try {
-      const blog = await blogService.update(id, updatedBlog)
-      setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
-      showSuccess(`${blog.title} by ${blog.author} liked!`)
-    } catch (e) {
-      showError(e.response.data.error)
-    }
+    dispatch(update(id, updatedBlog))
   }
 
   const removeBlog = async (id) => {
-    try {
-      await blogService.remove(id)
-      setBlogs(blogs.filter(b => b.id !== id))
-    } catch (e) {
-      showError(e.response.data.error)
-    }
-  }
-
-  const showSuccess = (message) => {
-    dispatch(success(message, 3))
+    dispatch(remove(id))
   }
 
   const showError = (message) => {
