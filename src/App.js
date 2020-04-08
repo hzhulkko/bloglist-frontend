@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import { useSelector, useDispatch } from 'react-redux'
-import { error } from './reducers/notificationReducer'
 import { getAll, add, update, remove } from './reducers/blogReducer'
+import { login, logout } from './reducers/userReducer'
 
 const App = () => {
 
@@ -16,42 +14,24 @@ const App = () => {
 
   const notification = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes))
-
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   useEffect(() => {
     dispatch(getAll())
   }, [dispatch])
-
-  useEffect(() => {
-    const user = JSON.parse(window.localStorage.getItem('loggedBlogsUser'))
-    if (user) {
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
 
   const getUser = () => {
     return user
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogsUser')
-    setUser(null)
+    dispatch(logout())
   }
 
-  const login = async (username, password) => {
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      blogService.setToken(user.token)
-      window.localStorage.setItem('loggedBlogsUser', JSON.stringify(user))
-      setUser(user)
-    } catch (e) {
-      showError(e.response.data.error)
-    }
+  const handleLogin = async (username, password) => {
+    dispatch(login(username, password))
   }
+
   const addBlog = async (newBlog) => {
     dispatch(add(newBlog))
   }
@@ -64,16 +44,12 @@ const App = () => {
     dispatch(remove(id))
   }
 
-  const showError = (message) => {
-    dispatch(error(message, 3))
-  }
-
   const showLogin = () => (
 
     <div>
       <h3>Login</h3>
       <LoginForm
-        login={login}
+        login={handleLogin}
       />
     </div>
   )
