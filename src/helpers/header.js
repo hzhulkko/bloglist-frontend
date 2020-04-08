@@ -1,0 +1,12 @@
+import localStorageItem from '../config'
+
+let user = JSON.parse(localStorage.getItem(localStorageItem))
+
+const authHeader = () => {
+  if (user && user.token) {
+    return { 'Authorization': 'Bearer ' + user.token }
+  }
+  return {}
+}
+
+export default { authHeader }
