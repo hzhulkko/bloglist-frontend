@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { update, remove } from '../reducers/blogReducer'
 
-const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
+const Blog = ({ blog }) => {
 
   const [viewFull, setViewFull] = useState(false)
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.user)
 
   const blogStyle = {
     paddingTop: 5,
@@ -11,6 +15,14 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const likeBlog = async (id, updatedBlog) => {
+    dispatch(update(id, updatedBlog))
+  }
+
+  const removeBlog = async (id) => {
+    dispatch(remove(id))
   }
 
   const toggleView = () => {
@@ -30,7 +42,6 @@ const Blog = ({ blog, likeBlog, removeBlog, getUser }) => {
   }
 
   const showRemoveButton = () => {
-    const currentUser = getUser()
     if (currentUser.username === blog.user.username) {
       return (
         <button onClick={handleRemove}>remove</button>

@@ -20,10 +20,6 @@ const App = () => {
     dispatch(getAll())
   }, [dispatch])
 
-  const getUser = () => {
-    return user
-  }
-
   const handleLogout = () => {
     dispatch(logout())
   }
@@ -34,14 +30,6 @@ const App = () => {
 
   const addBlog = async (newBlog) => {
     dispatch(add(newBlog))
-  }
-
-  const likeBlog = async (id, updatedBlog) => {
-    dispatch(update(id, updatedBlog))
-  }
-
-  const removeBlog = async (id) => {
-    dispatch(remove(id))
   }
 
   const showLogin = () => (
@@ -68,9 +56,6 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            likeBlog={likeBlog}
-            removeBlog={removeBlog}
-            getUser={getUser}
           />
         )}
       </div>
