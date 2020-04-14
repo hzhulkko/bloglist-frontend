@@ -5,7 +5,7 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
-import { login, logout } from './reducers/userReducer'
+import { login, logout } from './reducers/loginReducer'
 
 const App = () => {
 

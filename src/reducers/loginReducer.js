@@ -34,7 +34,7 @@ export const logout = () => {
   }
 }
 
-const userReducer = (state = initialUser, action) => {
+const loginReducer = (state = initialUser, action) => {
   switch(action.type) {
   case 'LOGIN':
     return action.data
@@ -46,4 +46,4 @@ const userReducer = (state = initialUser, action) => {
   }
 }
 
-export default userReducer
+export default loginReducer
