@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
 import { useSelector, useDispatch } from 'react-redux'
 import { login, logout } from './reducers/loginReducer'
 
@@ -37,6 +38,7 @@ const App = () => {
         <BlogForm/>
       </Togglable>
       <BlogList/>
+      <UserList/>
     </div>
   )
 
