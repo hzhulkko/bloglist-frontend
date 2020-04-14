@@ -1,21 +1,16 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAll } from './reducers/blogReducer'
 import { login, logout } from './reducers/userReducer'
 
 const App = () => {
 
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
-
-  useEffect(() => {
-    dispatch(getAll())
-  }, [dispatch])
 
   const handleLogout = () => {
     dispatch(logout())
