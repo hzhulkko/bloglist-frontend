@@ -6,7 +6,7 @@ const Blog = ({ blog }) => {
 
   const [viewFull, setViewFull] = useState(false)
   const dispatch = useDispatch()
-  const currentUser = useSelector(state => state.user)
+  const currentUser = useSelector(state => state.currentUser)
 
   const blogStyle = {
     paddingTop: 5,

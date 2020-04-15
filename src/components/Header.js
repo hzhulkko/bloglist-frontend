@@ -6,7 +6,7 @@ import { login, logout } from '../reducers/loginReducer'
 const Header = () => {
 
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const currentUser = useSelector(state => state.currentUser)
 
   const handleLogout = () => {
     dispatch(logout())
@@ -16,7 +16,7 @@ const Header = () => {
     dispatch(login(username, password))
   }
 
-  if (!user) {
+  if (!currentUser) {
     return (
       <div>
         <h3>Login</h3>
@@ -28,7 +28,7 @@ const Header = () => {
   } else {
     return (
       <div>
-        <p>Logged in as {user.name}</p>
+        <p>Logged in as {currentUser.name}</p>
         <button onClick={handleLogout}>logout</button>
       </div>
     )

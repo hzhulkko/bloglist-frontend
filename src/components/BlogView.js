@@ -7,9 +7,9 @@ import { useSelector } from 'react-redux'
 
 const BlogView = () => {
 
-  const user = useSelector(state => state.user)
+  const currentUser = useSelector(state => state.currentUser)
 
-  if (!user) {
+  if (!currentUser) {
     return null
   }
 
