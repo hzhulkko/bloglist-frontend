@@ -11,4 +11,12 @@ const getAll = async () => {
   return response.data
 }
 
-export default { getAll }
+const getOne = async (id) => {
+  const config = {
+    headers: header.authHeader()
+  }
+  const response = await axios.get(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
+export default { getAll, getOne }

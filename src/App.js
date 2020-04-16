@@ -2,6 +2,7 @@ import React from 'react'
 import Notification from './components/Notification'
 import Header from './components/Header'
 import BlogView from './components/BlogView'
+import User from './components/User'
 import {
   BrowserRouter as Router,
   Switch, Route, Link
@@ -22,6 +23,9 @@ const App = () => {
         <Notification/>
         <Header/>
         <Switch>
+          <Route path='/users/:id'>
+            <User/>
+          </Route>
           <Route path='/users'>
             <UserList/>
           </Route>
