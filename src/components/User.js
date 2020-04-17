@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import Blog from './Blog'
 import { useSelector, useDispatch } from 'react-redux'
 import { getSingleUser } from '../reducers/singleUserReducer'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 const User = () => {
 
@@ -17,10 +16,9 @@ const User = () => {
   const displayBlogs = () => {
     return (
       user.blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
+        <div key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
+        </div>
       )
     )
   }

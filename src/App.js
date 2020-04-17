@@ -3,6 +3,7 @@ import Notification from './components/Notification'
 import Header from './components/Header'
 import BlogView from './components/BlogView'
 import User from './components/User'
+import Blog from './components/Blog'
 import {
   BrowserRouter as Router,
   Switch, Route, Link
@@ -25,6 +26,9 @@ const App = () => {
         <Switch>
           <Route path='/users/:id'>
             <User/>
+          </Route>
+          <Route path='/blogs/:id'>
+            <Blog/>
           </Route>
           <Route path='/users'>
             <UserList/>
