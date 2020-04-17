@@ -2,15 +2,22 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import BlogForm from './BlogForm'
+import { add } from '../reducers/blogReducer'
+
+const mockDispatch = jest.fn()
+
+jest.mock('react-redux', () => ({
+  useDispatch: () => mockDispatch
+}))
+
+jest.mock('../reducers/blogReducer', () => ({
+  add: jest.fn()
+}))
 
 test('<BlogForm/> calls addblog when form is submitted', () => {
 
-  const addBlog = jest.fn()
-
   const component = render(
-    <BlogForm
-      addBlog={addBlog}
-    />
+    <BlogForm/>
   )
 
   const titleInput = component.container.querySelector('#title')
@@ -28,10 +35,10 @@ test('<BlogForm/> calls addblog when form is submitted', () => {
   const form = component.container.querySelector('form')
   fireEvent.submit(form)
 
-  expect(addBlog.mock.calls.length).toBe(1)
-  expect(addBlog.mock.calls[0][0].title).toBe('Title')
-  expect(addBlog.mock.calls[0][0].author).toBe('Author')
-  expect(addBlog.mock.calls[0][0].url).toBe('http://test.url')
+  expect(add.mock.calls.length).toBe(1)
+  expect(add.mock.calls[0][0].title).toBe('Title')
+  expect(add.mock.calls[0][0].author).toBe('Author')
+  expect(add.mock.calls[0][0].url).toBe('http://test.url')
 
 })
 

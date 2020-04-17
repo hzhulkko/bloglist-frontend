@@ -1,48 +1,61 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
+import { update, remove } from '../reducers/blogReducer'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import Blog from './Blog'
+
+const mockDispatch = jest.fn()
+const mockHistory = jest.fn()
+
+jest.mock('react-redux', () => ({
+  useSelector: jest.fn(),
+  useDispatch: () => mockDispatch
+}))
+
+jest.mock('react-router-dom', () => ({
+  useParams: jest.fn(),
+  useHistory: () => ({
+    push: mockHistory
+  }),
+}))
+
+jest.mock('../reducers/blogReducer', () => ({
+  update: jest.fn(),
+  remove: jest.fn()
+
+}))
+
 
 describe('<Blog/>', () => {
 
   let component
-  const getUser = jest.fn(() => '')
-  const likeBlog = jest.fn()
+
+  const testBlog = {
+    title: 'Test',
+    author: 'Author',
+    url: 'http://url.test',
+    likes: 10,
+    user : { name: 'Test User' },
+    id: 1
+  }
 
   beforeEach(() => {
-    const testBlog = {
-      title: 'Test',
-      author: 'Author',
-      url: 'http://url.test',
-      likes: 10,
-      user : { name: 'Test User' }
-    }
-    component = render(
-      <Blog
-        blog={testBlog}
-        getUser={getUser}
-        likeBlog={likeBlog}
-      />
-    )
+    useSelector.mockImplementation(() => {
+      return testBlog
+    })
+    useParams.mockImplementation(() => {
+      return { id: 1 }
+    })
+    component = render(<Blog />)
   })
 
-  test('renders title and author at start', () => {
-
-    expect(component.container.querySelector('.blog'))
-      .toHaveTextContent('Test by Author')
-    expect(component.container.querySelector('.blog'))
-      .not.toHaveTextContent('url: http://url.test')
-    expect(component.container.querySelector('.blog'))
-      .not.toHaveTextContent('likes: 10')
-    expect(component.container.querySelector('.blog'))
-      .not.toHaveTextContent('user: Test User')
-
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
-  test('renders url, likes and user when view is clicked', () => {
-
-    const viewButton = component.getByText('view')
-    fireEvent.click(viewButton)
+  test('renders title, author, url and likes', () => {
 
     expect(component.container.querySelector('.blog'))
       .toHaveTextContent('Test by Author')
@@ -55,16 +68,13 @@ describe('<Blog/>', () => {
 
   })
 
-  test('when like is clicked twice, likeBlog is called twice', () => {
-
-    const viewButton = component.getByText('view')
-    fireEvent.click(viewButton)
+  test('when like is clicked twice, update is called twice', () => {
 
     const likeButton = component.getByText('like')
     fireEvent.click(likeButton)
     fireEvent.click(likeButton)
 
-    expect(likeBlog.mock.calls.length).toBe(2)
+    expect(update.mock.calls.length).toBe(2)
 
   })
 
@@ -72,89 +82,105 @@ describe('<Blog/>', () => {
 
 describe('Remove button', () => {
 
+  beforeEach(() => {
+    useParams.mockImplementation(() => {
+      return { id: 1 }
+    })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('is displayed when user is the same as the user who added the blog', () => {
-    const testBlog = {
-      title: 'Test',
-      author: 'Author',
-      url: 'http://url.test',
-      likes: 10,
-      user : { name: 'Test User' , username: 'testuser' }
+
+    const mockState = {
+      blogs: [
+        {
+          title: 'Test',
+          author: 'Author',
+          url: 'http://url.test',
+          likes: 10,
+          user : { name: 'Test User' , username: 'testuser' },
+          id: 1
+        }
+      ],
+      currentUser : { name: 'Test User' , username: 'testuser' }
     }
-    const getUser = jest.fn(() => {
-      const user = { name: 'Test User' , username: 'testuser' }
-      return user
+
+    useSelector.mockImplementation(callback => {
+      return callback(mockState)
     })
 
     const component = render(
-      <Blog
-        blog={testBlog}
-        getUser={getUser}
-      />
+      <Blog/>
     )
 
-    const viewButton = component.getByText('view')
-    fireEvent.click(viewButton)
     expect(component.queryByText('remove')).toBeInTheDocument()
 
   })
 
   test('is not displayed when user is not the same as the user who added the blog', () => {
-    const testBlog = {
-      title: 'Test',
-      author: 'Author',
-      url: 'http://url.test',
-      likes: 10,
-      user : { name: 'Test User' , username: 'testuser' }
+
+    const mockState = {
+      blogs: [
+        {
+          title: 'Test',
+          author: 'Author',
+          url: 'http://url.test',
+          likes: 10,
+          user : { name: 'Test User' , username: 'testuser' },
+          id: 1
+        }
+      ],
+      currentUser : { name: 'Another User' , username: 'anotheruser' }
     }
-    const getUser = jest.fn(() => {
-      const user = { name: 'Another User' , username: 'anotheruser' }
-      return user
+
+    useSelector.mockImplementation(callback => {
+      return callback(mockState)
     })
 
     const component = render(
-      <Blog
-        blog={testBlog}
-        getUser={getUser}
-      />
+      <Blog/>
     )
 
-    const viewButton = component.getByText('view')
-    fireEvent.click(viewButton)
     expect(component.queryByText('remove')).not.toBeInTheDocument()
 
   })
 
-  test('calls removeBlog when clicked', () => {
-    const testBlog = {
-      title: 'Test',
-      author: 'Author',
-      url: 'http://url.test',
-      likes: 10,
-      user : { name: 'Test User' , username: 'testuser' },
-      id: 'abc'
-    }
-    const getUser = jest.fn(() => {
-      const user = { name: 'Test User' , username: 'testuser' }
-      return user
-    })
+  test('when clicked calls remove and redirects to /', () => {
 
-    const removeBlog = jest.fn()
+    const mockState = {
+      blogs: [
+        {
+          title: 'Test',
+          author: 'Author',
+          url: 'http://url.test',
+          likes: 10,
+          user : { name: 'Test User' , username: 'testuser' },
+          id: 1
+        }
+      ],
+      currentUser : { name: 'Test User' , username: 'testuser' }
+    }
+
     window.confirm = jest.fn(() => true)
 
-    const component = render(
-      <Blog
-        blog={testBlog}
-        getUser={getUser}
-        removeBlog={removeBlog}
-      />
-    )
+    useSelector.mockImplementation(callback => {
+      return callback(mockState)
+    })
 
-    const viewButton = component.getByText('view')
-    fireEvent.click(viewButton)
+    const component = render(
+      <Blog/>
+    )
     const removeButton = component.queryByText('remove')
     fireEvent.click(removeButton)
-    expect(removeBlog.mock.calls.length).toBe(1)
-    expect(removeBlog.mock.calls[0][0]).toBe('abc')
+    expect(remove.mock.calls.length).toBe(1)
+    // called with parameter id
+    expect(remove.mock.calls[0][0]).toBe(1)
+    expect(mockHistory.mock.calls.length).toBe(1)
+    expect(mockHistory.mock.calls[0][0]).toBe('/')
+
 
   })
 
