@@ -11,7 +11,7 @@ const User = () => {
 
   useEffect(() => {
     dispatch(getSingleUser(id))
-  }, [dispatch])
+  }, [dispatch, id])
 
   const displayBlogs = () => {
     return (

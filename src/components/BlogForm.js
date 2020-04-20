@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { add } from '../reducers/blogReducer'
+import { add } from '../reducers/blogListReducer'
 
 const BlogForm = () => {
 

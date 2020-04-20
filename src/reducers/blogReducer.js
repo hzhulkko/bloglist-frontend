@@ -1,17 +1,16 @@
 import blogService from '../services/blogs'
 import { error, success } from './notificationReducer'
 
-export const add = (newBlog) => {
+export const getOne = (id) => {
   return dispatch => {
-    blogService.create(newBlog)
+    blogService.getOne(id)
       .then(blog => {
         dispatch(
           {
-            type: 'ADD',
+            type: 'UPDATE',
             data: blog
           }
         )
-        dispatch(success(`${blog.title} by ${blog.author} added`, 3))
       })
       .catch(e => {
         dispatch(error(e.response.data.error, 3))
@@ -20,7 +19,7 @@ export const add = (newBlog) => {
   }
 }
 
-export const update = (id, updatedBlog) => {
+export const like = (id, updatedBlog) => {
   return dispatch => {
     blogService.update(id, updatedBlog)
       .then(blog => {
@@ -30,7 +29,7 @@ export const update = (id, updatedBlog) => {
             data: blog
           }
         )
-        dispatch(success(`${blog.title} by ${blog.author} voted`, 3))
+        dispatch(success(`${blog.title} by ${blog.author} liked`, 3))
       })
       .catch(e => {
         dispatch(error(e.response.data.error, 3))
@@ -57,47 +56,12 @@ export const addComment = (id, comment) => {
   }
 }
 
-export const remove = (id) => {
-  return dispatch => {
-    blogService.remove(id)
-      .then(() => {
-        dispatch(
-          {
-            type: 'DELETE',
-            data: { id }
-          }
-        )
-      })
-      .catch(e => {
-        dispatch(error(e.response.data.error, 3))
-      })
-  }
-}
-
-export const getAll = () => {
-  return dispatch => {
-    blogService.getAll()
-      .then(blogs => {
-        dispatch(
-          {
-            type: 'GET_ALL',
-            data: blogs
-          }
-        )
-      })
-  }
-}
-
-const blogReducer = (state = [], action) => {
+const blogReducer = (state = null, action) => {
   switch(action.type) {
-  case 'GET_ALL':
-    return action.data
-  case 'ADD':
-    return [...state, action.data]
   case 'UPDATE':
-    return state.map(blog => blog.id === action.data.id ? action.data : blog)
+    return action.data
   case 'DELETE':
-    return state.filter(blog => blog.id !== action.data.id)
+    return null
   default:
     return state
   }

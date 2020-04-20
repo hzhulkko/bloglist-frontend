@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useHistory } from 'react-router-dom'
-import { update, remove } from '../reducers/blogReducer'
+import { useHistory, useRouteMatch } from 'react-router-dom'
+import { getOne, like } from '../reducers/blogReducer'
+import { remove } from '../reducers/blogListReducer'
 import CommentForm from './CommentForm'
 import Comments from './Comments'
 
 const Blog = () => {
 
   const dispatch = useDispatch()
-  const id = useParams().id
+  const match = useRouteMatch('/blogs/:id')
+  const id = match ? match.params.id : null
   const history = useHistory()
   const currentUser = useSelector(state => state.currentUser)
-  const blog = useSelector(state => state.blogs.find(b => b.id === id))
+  const blog = useSelector(state => state.currentBlog)
+  console.log(blog)
+
+  useEffect(() => {
+    dispatch(getOne(id))
+  }, [dispatch, id])
 
   const blogStyle = {
     paddingTop: 5,
@@ -23,7 +30,7 @@ const Blog = () => {
   }
 
   const likeBlog = async (id, updatedBlog) => {
-    dispatch(update(id, updatedBlog))
+    dispatch(like(id, updatedBlog))
   }
 
   const removeBlog = async (id) => {
@@ -65,7 +72,7 @@ const Blog = () => {
       <p className='likes'>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
       <p className='user'>user: {blog.user.name}</p>
       {showRemoveButton()}
-      <CommentForm id={id}/>
+      <CommentForm id={blog.id}/>
       <Comments blog={blog}/>
     </div>
   )

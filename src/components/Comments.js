@@ -1,6 +1,10 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Comments = ({ blog }) => {
+const Comments = () => {
+
+  const blog = useSelector(state => state.currentBlog)
+
   return(
     <div id='blog-comments'>
       <h3>Comments</h3>

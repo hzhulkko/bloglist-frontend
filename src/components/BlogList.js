@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAll } from '../reducers/blogReducer'
+import { getAll } from '../reducers/blogListReducer'
 import { Link } from 'react-router-dom'
 
 const BlogList = () => {
