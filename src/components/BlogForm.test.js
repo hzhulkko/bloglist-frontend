@@ -14,6 +14,10 @@ jest.mock('../reducers/blogReducer', () => ({
   add: jest.fn()
 }))
 
+afterAll(() => {
+  jest.clearAllMocks()
+})
+
 test('<BlogForm/> calls addblog when form is submitted', () => {
 
   const component = render(

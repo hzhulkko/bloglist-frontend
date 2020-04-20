@@ -39,6 +39,24 @@ export const update = (id, updatedBlog) => {
   }
 }
 
+export const addComment = (id, comment) => {
+  return dispatch => {
+    blogService.addComment(id, comment)
+      .then(blog => {
+        dispatch(
+          {
+            type: 'UPDATE',
+            data: blog
+          }
+        )
+        dispatch(success('Comment added', 3))
+      })
+      .catch(e => {
+        dispatch(error(e.response.data.error, 3))
+      })
+  }
+}
+
 export const remove = (id) => {
   return dispatch => {
     blogService.remove(id)

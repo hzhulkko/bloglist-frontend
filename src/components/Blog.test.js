@@ -23,9 +23,13 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('../reducers/blogReducer', () => ({
   update: jest.fn(),
-  remove: jest.fn()
-
+  remove: jest.fn(),
 }))
+
+// Mock child components
+
+jest.mock('./CommentForm', () => () => (<div>Comment form mock</div>))
+jest.mock('./Comments', () => () => (<h3>Comments</h3>))
 
 
 describe('<Blog/>', () => {
@@ -77,7 +81,6 @@ describe('<Blog/>', () => {
     expect(update.mock.calls.length).toBe(2)
 
   })
-
 })
 
 describe('Remove button', () => {

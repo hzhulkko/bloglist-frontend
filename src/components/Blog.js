@@ -2,6 +2,8 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
 import { update, remove } from '../reducers/blogReducer'
+import CommentForm from './CommentForm'
+import Comments from './Comments'
 
 const Blog = () => {
 
@@ -63,6 +65,8 @@ const Blog = () => {
       <p className='likes'>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
       <p className='user'>user: {blog.user.name}</p>
       {showRemoveButton()}
+      <CommentForm id={id}/>
+      <Comments blog={blog}/>
     </div>
   )
 
