@@ -1,10 +1,11 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
-import { update, remove } from '../reducers/blogReducer'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useRouteMatch } from 'react-router-dom'
 import Blog from './Blog'
+import { getOne, like } from '../reducers/blogReducer'
+import { remove } from '../reducers/blogListReducer'
 
 const mockDispatch = jest.fn()
 const mockHistory = jest.fn()
@@ -16,14 +17,19 @@ jest.mock('react-redux', () => ({
 
 jest.mock('react-router-dom', () => ({
   useParams: jest.fn(),
+  useRouteMatch: jest.fn(),
   useHistory: () => ({
     push: mockHistory
   }),
 }))
 
 jest.mock('../reducers/blogReducer', () => ({
-  update: jest.fn(),
-  remove: jest.fn(),
+  getOne: jest.fn(),
+  like: jest.fn()
+}))
+
+jest.mock('../reducers/blogListReducer', () => ({
+  remove: jest.fn()
 }))
 
 // Mock child components
@@ -52,6 +58,9 @@ describe('<Blog/>', () => {
     useParams.mockImplementation(() => {
       return { id: 1 }
     })
+    useRouteMatch.mockImplementation(() => {
+      return { params : { id: 1 } }
+    })
     component = render(<Blog />)
   })
 
@@ -72,13 +81,13 @@ describe('<Blog/>', () => {
 
   })
 
-  test('when like is clicked twice, update is called twice', () => {
+  test('when like is clicked twice, like is called twice', () => {
 
     const likeButton = component.getByText('like')
     fireEvent.click(likeButton)
     fireEvent.click(likeButton)
 
-    expect(update.mock.calls.length).toBe(2)
+    expect(like.mock.calls.length).toBe(2)
 
   })
 })
@@ -89,6 +98,9 @@ describe('Remove button', () => {
     useParams.mockImplementation(() => {
       return { id: 1 }
     })
+    useRouteMatch.mockImplementation(() => {
+      return { params : { id: 1 } }
+    })
   })
 
   afterEach(() => {
@@ -98,7 +110,7 @@ describe('Remove button', () => {
   test('is displayed when user is the same as the user who added the blog', () => {
 
     const mockState = {
-      blogs: [
+      currentBlog:
         {
           title: 'Test',
           author: 'Author',
@@ -106,8 +118,7 @@ describe('Remove button', () => {
           likes: 10,
           user : { name: 'Test User' , username: 'testuser' },
           id: 1
-        }
-      ],
+        },
       currentUser : { name: 'Test User' , username: 'testuser' }
     }
 
@@ -126,7 +137,7 @@ describe('Remove button', () => {
   test('is not displayed when user is not the same as the user who added the blog', () => {
 
     const mockState = {
-      blogs: [
+      currentBlog:
         {
           title: 'Test',
           author: 'Author',
@@ -134,8 +145,7 @@ describe('Remove button', () => {
           likes: 10,
           user : { name: 'Test User' , username: 'testuser' },
           id: 1
-        }
-      ],
+        },
       currentUser : { name: 'Another User' , username: 'anotheruser' }
     }
 
@@ -154,7 +164,7 @@ describe('Remove button', () => {
   test('when clicked calls remove and redirects to /', () => {
 
     const mockState = {
-      blogs: [
+      currentBlog:
         {
           title: 'Test',
           author: 'Author',
@@ -162,8 +172,7 @@ describe('Remove button', () => {
           likes: 10,
           user : { name: 'Test User' , username: 'testuser' },
           id: 1
-        }
-      ],
+        },
       currentUser : { name: 'Test User' , username: 'testuser' }
     }
 

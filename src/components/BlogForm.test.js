@@ -2,7 +2,7 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import BlogForm from './BlogForm'
-import { add } from '../reducers/blogReducer'
+import { add } from '../reducers/blogListReducer'
 
 const mockDispatch = jest.fn()
 
@@ -10,7 +10,7 @@ jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch
 }))
 
-jest.mock('../reducers/blogReducer', () => ({
+jest.mock('../reducers/blogListReducer', () => ({
   add: jest.fn()
 }))
 

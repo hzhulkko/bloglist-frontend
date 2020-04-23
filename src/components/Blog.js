@@ -14,7 +14,6 @@ const Blog = () => {
   const history = useHistory()
   const currentUser = useSelector(state => state.currentUser)
   const blog = useSelector(state => state.currentBlog)
-  console.log(blog)
 
   useEffect(() => {
     dispatch(getOne(id))
